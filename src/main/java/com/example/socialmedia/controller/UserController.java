@@ -4,6 +4,7 @@ import com.example.socialmedia.dto.UserCreateRequest;
 import com.example.socialmedia.dto.UserResponse;
 import com.example.socialmedia.entity.User;
 import com.example.socialmedia.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponse createUser(@RequestBody UserCreateRequest request) {
+    public UserResponse createUser(@Valid  @RequestBody UserCreateRequest request) {
 
         User user = new User();
         user.setUsername(request.getUsername());
