@@ -1,9 +1,4 @@
-Nice — let’s make it **GitHub-perfect** ✨
-Clean, professional, recruiter-friendly, and not bloated.
 
-You can copy-paste this **as-is** into `README.md`.
-
----
 
 # 🚀 Social Media Backend API
 
