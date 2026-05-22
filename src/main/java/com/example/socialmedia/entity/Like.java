@@ -8,6 +8,9 @@ import lombok.*;
         name = "likes",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"user_id", "post_id"})
+        },
+        indexes = {
+                @Index(name = "idx_likes_user_post", columnList = "user_id, post_id")
         }
 )
 @Getter

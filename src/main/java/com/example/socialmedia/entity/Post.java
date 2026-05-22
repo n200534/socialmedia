@@ -6,7 +6,15 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "posts")
+@Table(
+        name = "posts",
+        indexes = {
+                @Index(
+                        name = "idx_posts_user_created",
+                        columnList = "user_id, created_at DESC"
+                )
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,4 +34,9 @@ public class Post {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

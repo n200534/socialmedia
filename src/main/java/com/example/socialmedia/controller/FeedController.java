@@ -24,20 +24,13 @@ public class FeedController {
     public List<PostResponse> getFeed(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            Authentication authentication) {
+            Authentication authentication
+    ) {
 
-        String userEmail = authentication.getName();
-
-        Page<Post> feedPage = feedService.getFeed(userEmail, page, size);
-
-        return feedPage.getContent()
-                .stream()
-                .map(post -> new PostResponse(
-                        post.getId(),
-                        post.getContent(),
-                        post.getUser().getUsername(),
-                        post.getCreatedAt()
-                ))
-                .collect(Collectors.toList());
+        return feedService.getFeed(
+                authentication.getName(),
+                page,
+                size
+        );
     }
 }

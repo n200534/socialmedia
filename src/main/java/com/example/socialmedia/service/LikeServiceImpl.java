@@ -3,6 +3,7 @@ package com.example.socialmedia.service;
 import com.example.socialmedia.entity.Like;
 import com.example.socialmedia.entity.Post;
 import com.example.socialmedia.entity.User;
+import com.example.socialmedia.exception.AlreadyLikedException;
 import com.example.socialmedia.repository.LikeRepository;
 import com.example.socialmedia.repository.PostRepository;
 import com.example.socialmedia.repository.UserRepository;
@@ -34,7 +35,7 @@ public class LikeServiceImpl implements LikeService {
 
         likeRepository.findByUserIdAndPostId(user.getId(), postId)
                 .ifPresent(like -> {
-                    throw new RuntimeException("Post already liked");
+                    throw new AlreadyLikedException();
                 });
 
         Like like = new Like();

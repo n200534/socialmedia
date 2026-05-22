@@ -1,9 +1,14 @@
 package com.example.socialmedia.service;
 
-import com.example.socialmedia.entity.Post;
-import org.springframework.data.domain.Page;
+import com.example.socialmedia.dto.PostResponse;
+
+import java.util.List;
 
 public interface FeedService {
 
-    Page<Post> getFeed(String userEmail, int page, int size);
+    List<PostResponse> getFeed(
+            String userEmail,
+            int page,
+            int size
+    );
 }

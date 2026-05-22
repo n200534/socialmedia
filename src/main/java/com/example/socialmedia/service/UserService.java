@@ -12,4 +12,6 @@ public interface UserService {
 
     User login(String email, String password);
 
+    User updateUsername(Long id,String username);
+
 }

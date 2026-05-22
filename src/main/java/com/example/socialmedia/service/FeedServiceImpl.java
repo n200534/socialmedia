@@ -1,10 +1,13 @@
 package com.example.socialmedia.service;
 
+import com.example.socialmedia.dto.PostResponse;
 import com.example.socialmedia.entity.Post;
 import com.example.socialmedia.entity.User;
+import com.example.socialmedia.exception.UserNotFoundException;
 import com.example.socialmedia.repository.FollowRepository;
 import com.example.socialmedia.repository.PostRepository;
 import com.example.socialmedia.repository.UserRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -27,21 +30,39 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    public Page<Post> getFeed(String userEmail, int page, int size) {
+    @Cacheable(
+            value = "feeds",
+            key = "#userEmail + ':' + #page + ':' + #size"
+    )
+    public List<PostResponse> getFeed(
+            String userEmail,
+            int page,
+            int size
+    ) {
 
+        System.out.println("Fetching feed from DB...");
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(userEmail));
 
         List<Long> followedUserIds =
                 followRepository.findFollowingUserIds(user.getId());
 
-        if (followedUserIds.isEmpty()) {
-            return Page.empty();
-        }
+        followedUserIds.add(user.getId());
 
-        return postRepository.findByUserIdInOrderByCreatedAtDesc(
+        Page<Post> feedPage = postRepository.findFeedWithUser(
                 followedUserIds,
                 PageRequest.of(page, size)
         );
+
+        return feedPage.getContent()
+                .stream()
+                .map(post -> new PostResponse(
+                        post.getId(),
+                        post.getContent(),
+                        post.getUser().getUsername(),
+                        post.getCreatedAt()
+                ))
+                .toList();
     }
+
 }

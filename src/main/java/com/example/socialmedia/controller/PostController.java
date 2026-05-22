@@ -50,4 +50,18 @@ public class PostController {
                 ))
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/me")
+    public List<PostResponse> getMyPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Authentication authentication
+    ) {
+
+        return postService.getMyPosts(
+                authentication.getName(),
+                page,
+                size
+        );
+    }
 }

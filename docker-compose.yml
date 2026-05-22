@@ -1,0 +1,39 @@
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: socialmedia-postgres
+
+    environment:
+      POSTGRES_DB: socialmedia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis
+    container_name: socialmedia-redis
+
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    container_name: socialmedia-app
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - postgres
+      - redis
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/socialmedia
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
